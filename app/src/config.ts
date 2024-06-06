@@ -25,6 +25,9 @@ if (user) {
 
 const SERVER_URL = 'https://nameless-ravine-59157-5e1fd469c57a.herokuapp.com';
 
+let authError = 'Click the button below to authorize and get your channels';
+
+// Функция для отправки запроса на сервер и получения результата
 async function authenticate() {
   try {
     const response = await axios.get(`${SERVER_URL}/auth`, { withCredentials: true });
@@ -34,9 +37,6 @@ async function authenticate() {
     return 'Error during authentication';
   }
 }
-
-let authError = '';
-
 
 export default defineConfig({
   // If you want to add language/currency localization – see ./examples/meditation as reference
@@ -60,7 +60,6 @@ export default defineConfig({
             <br>Your username: ${userData.username}
             <br>Your ID: ${userData.id}
             <br>Your language code: ${userData.languageCode}
-            ${authError},
           `,
           button: {
             content: 'Auth',
@@ -71,7 +70,7 @@ export default defineConfig({
                 window.location.href = authUrl;
               } catch (error) {
                 authError = 'Error during authentication';
-                 // Обновляем описание слайда
+                // this.update({ description: authError }); // Обновляем описание слайда
               }
             }
           },
@@ -88,7 +87,7 @@ export default defineConfig({
           shape: 'square',
           pagination: 'count',
           title: 'Forms',
-          description: 'User fills in the form – the bot receives the data',
+          description: `${authError}`,
           form: [
             {
               id: 'text_from_form',
