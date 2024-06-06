@@ -1,4 +1,5 @@
 import { defineConfig } from '@tok/generation';
+import axios from 'axios';
 
 const tg = window.Telegram.WebApp;
 
@@ -24,6 +25,16 @@ if (user) {
 }
 
 const SERVER_URL = 'https://nameless-ravine-59157-5e1fd469c57a.herokuapp.com';
+
+async function authenticate() {
+  try {
+    const response = await axios.get(`${SERVER_URL}/auth`, { withCredentials: true });
+    return response.status === 200 ? 'success' : 'error';
+  } catch (error) {
+    console.error('Error during authentication:', error);
+    return 'error';
+  }
+}
 
 
 export default defineConfig({
@@ -52,92 +63,96 @@ export default defineConfig({
           button: {
             content: 'Auth',
             async click() {
-              try {
-                const authUrl = `${SERVER_URL}/auth`;
-                window.open(authUrl, '_blank'); // Открытие диплинка в новом окне
-              } catch (error) {
-                // authError = 'Error during authentication';
-                // this.update({ description: authError }); // Обновляем описание слайда
+              const result = await authenticate();
+              if (result === 'success') {
+                // Перенаправление на страницу paywall
+                // tg.MainButton.setText("Redirecting...");
+                // tg.MainButton.show();
+                setTimeout(() => {
+                  window.location.href = '#/paywall';
+                }, 1000);
+              } else {
+                alert('Error during authentication'); // Временное решение: показать сообщение об ошибке
               }
             }
           },
         },
 
         // form
-        {
-          extends: 'form', // note, it's important to extend from 'form' here
-          media: {
-            type: 'sticker',
-            src: import('./assets/stickers/duck_spy.tgs'),
-            size: 150,
-          },
-          shape: 'square',
-          pagination: 'count',
-          title: 'Forms',
-          description: 'SHIT',
-          form: [
-            {
-              id: 'text_from_form',
-              placeholder: 'Text input',
-              type: 'text',
-            },
-            {
-              id: 'number_from_form',
-              placeholder: 'Number input',
-              type: 'number',
-            },
-            {
-              id: 'checkbox_from_form',
-              placeholder: 'Checkbox',
-              type: 'checkbox',
-            },
-          ],
-          button: 'Next',
-        },
+        // {
+        //   extends: 'form', // note, it's important to extend from 'form' here
+        //   media: {
+        //     type: 'sticker',
+        //     src: import('./assets/stickers/duck_spy.tgs'),
+        //     size: 150,
+        //   },
+        //   shape: 'square',
+        //   pagination: 'count',
+        //   title: 'Forms',
+        //   description: 'SHIT',
+        //   form: [
+        //     {
+        //       id: 'text_from_form',
+        //       placeholder: 'Text input',
+        //       type: 'text',
+        //     },
+        //     {
+        //       id: 'number_from_form',
+        //       placeholder: 'Number input',
+        //       type: 'number',
+        //     },
+        //     {
+        //       id: 'checkbox_from_form',
+        //       placeholder: 'Checkbox',
+        //       type: 'checkbox',
+        //     },
+        //   ],
+        //   button: 'Next',
+        // },
 
-        // list
-        {
-          media: {
-            type: 'sticker',
-            src: import('./assets/stickers/duck_juggling.tgs'),
-            size: 150,
-          },
-          shape: 'square',
-          pagination: 'count',
-          title: 'Lists',
-          description:
-            'Lists can be used to showcase <b>features</b> of your product. Items support customizable icons',
-          list: [
-            {
-              media: {
-                type: 'icon',
-                src: import('./assets/icons/guide.svg'),
-                size: 30,
-              },
-              text: 'Some cool feature',
-            },
-            {
-              media: {
-                type: 'icon',
-                src: import('./assets/icons/track.svg'),
-                size: 30,
-              },
-              text: 'Some very cool feature',
-            },
-            {
-              media: {
-                type: 'icon',
-                src: import('./assets/icons/time.svg'),
-                size: 30,
-              },
-              text: 'Some extremely cool feature',
-            },
-          ],
-          button: {
-            content: 'Go to paywall',
-            to: '/paywall'
-          },
-        },
+        // // list
+        // {
+        //   media: {
+        //     type: 'sticker',
+        //     src: import('./assets/stickers/duck_juggling.tgs'),
+        //     size: 150,
+        //   },
+        //   shape: 'square',
+        //   pagination: 'count',
+        //   title: 'Lists',
+        //   description:
+        //     'Lists can be used to showcase <b>features</b> of your product. Items support customizable icons',
+        //   list: [
+        //     {
+        //       media: {
+        //         type: 'icon',
+        //         src: import('./assets/icons/guide.svg'),
+        //         size: 30,
+        //       },
+        //       text: 'Some cool feature',
+        //     },
+        //     {
+        //       media: {
+        //         type: 'icon',
+        //         src: import('./assets/icons/track.svg'),
+        //         size: 30,
+        //       },
+        //       text: 'Some very cool feature',
+        //     },
+        //     {
+        //       media: {
+        //         type: 'icon',
+        //         src: import('./assets/icons/time.svg'),
+        //         size: 30,
+        //       },
+        //       text: 'Some extremely cool feature',
+        //     },
+        //   ],
+        //   button: {
+        //     content: 'Go to paywall',
+        //     to: '/paywall'
+        //   },
+        // },
       ],
     },
 
