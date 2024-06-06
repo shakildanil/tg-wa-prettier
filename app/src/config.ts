@@ -23,6 +23,8 @@ if (user) {
   };
 }
 
+const SERVER_URL = 'http://localhost:5000';
+
 export default defineConfig({
   // If you want to add language/currency localization – see ./examples/meditation as reference
 
@@ -41,7 +43,10 @@ export default defineConfig({
           title: `Hello, ${userData.firstName}!`,
           description:
             "Create stunning onboarding and paywall for your Telegram Bot using the full power of Mini Apps<br><br>It's <b>simple</b>, <b>fast</b>, highly <b>customizable</b> and <a href='https://github.com/Easterok/telegram-onboarding-kit' target='_blank'>open-source</a>!",
-          button: 'Next',
+          button: {
+            content: 'Auth',
+            to: `${SERVER_URL}/auth`
+          },
         },
 
         // form
