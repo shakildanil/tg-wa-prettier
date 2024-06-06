@@ -1,5 +1,28 @@
 import { defineConfig } from '@tok/generation';
 
+const tg = window.Telegram.WebApp;
+
+// Инициализация данных пользователя
+const user = tg.initDataUnsafe?.user;
+
+let userData = {
+  id: '',
+  firstName: '',
+  lastName: '',
+  username: '',
+  languageCode: ''
+};
+
+if (user) {
+  userData = {
+    id: user.id,
+    firstName: user.first_name,
+    lastName: user.last_name || '',  // Значение по умолчанию
+    username: user.username || '',    // Значение по умолчанию
+    languageCode: user.language_code
+  };
+}
+
 export default defineConfig({
   // If you want to add language/currency localization – see ./examples/meditation as reference
 
@@ -15,7 +38,7 @@ export default defineConfig({
           },
           shape: 'square',
           pagination: 'count',
-          title: 'Testing this shit out',
+          title: 'Hello, ${userData.firstName}!',
           description:
             "Create stunning onboarding and paywall for your Telegram Bot using the full power of Mini Apps<br><br>It's <b>simple</b>, <b>fast</b>, highly <b>customizable</b> and <a href='https://github.com/Easterok/telegram-onboarding-kit' target='_blank'>open-source</a>!",
           button: 'Next',
