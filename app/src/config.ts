@@ -23,7 +23,7 @@ if (user) {
   };
 }
 
-const SERVER_URL = 'http://localhost:5000';
+const SERVER_URL = 'https://nameless-ravine-59157-5e1fd469c57a.herokuapp.com/auth';
 
 export default defineConfig({
   // If you want to add language/currency localization – see ./examples/meditation as reference
