@@ -23,7 +23,7 @@ if (user) {
   };
 }
 
-const SERVER_URL = 'https://nameless-ravine-59157-5e1fd469c57a.herokuapp.com/auth';
+const SERVER_URL = 'https://nameless-ravine-59157-5e1fd469c57a.herokuapp.com';
 
 export default defineConfig({
   // If you want to add language/currency localization – see ./examples/meditation as reference
