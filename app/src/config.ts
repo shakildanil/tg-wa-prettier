@@ -36,6 +36,18 @@ async function authenticate() {
   }
 }
 
+// Определение функции для обработки клика по кнопке
+async function handleAuthClick() {
+  const result = await authenticate();
+  if (result === 'success') {
+    setTimeout(() => {
+      window.location.href = '#/paywall';
+    }, 1000);
+  } else {
+    alert('Error during authentication'); // Временное решение: показать сообщение об ошибке
+  }
+}
+
 
 export default defineConfig({
   // If you want to add language/currency localization – see ./examples/meditation as reference
@@ -62,19 +74,7 @@ export default defineConfig({
           `,
           button: {
             content: 'Auth',
-            async click() {
-              const result = await authenticate();
-              if (result === 'success') {
-                // Перенаправление на страницу paywall
-                // tg.MainButton.setText("Redirecting...");
-                // tg.MainButton.show();
-                setTimeout(() => {
-                  window.location.href = '#/paywall';
-                }, 1000);
-              } else {
-                alert('Error during authentication'); // Временное решение: показать сообщение об ошибке
-              }
-            }
+            click: handleAuthClick
           },
         },
 
