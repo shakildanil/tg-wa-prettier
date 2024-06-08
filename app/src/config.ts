@@ -74,7 +74,8 @@ export default defineConfig({
           `,
           button: {
             content: 'Auth',
-            click: handleAuthClick
+            path: 'https://google.com',
+            // click: handleAuthClick
           },
         },
 
