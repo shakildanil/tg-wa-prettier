@@ -37,20 +37,18 @@ async function authenticate() {
   }
 }
 
-// Определение функции для обработки клика по MainButton
+// Определение функции для обработки клика по кнопке
 async function handleAuthClick() {
   const result = await authenticate();
   if (result === 'success') {
-    setTimeout(() => {
-      window.location.href = 'https://www.google.com'; // Перенаправление на Google
-    }, 1000);
+    window.open('https://www.google.com', '_blank'); // Перенаправление на Google
   } else {
     alert('Error during authentication'); // Временное решение: показать сообщение об ошибке
   }
 }
 
 // Установка текста и обработчика для MainButton
-tg.MainButton.setText('Auth');
+tg.MainButton.setText('Auth trying');
 tg.MainButton.onClick(handleAuthClick);
 tg.MainButton.show();
 
