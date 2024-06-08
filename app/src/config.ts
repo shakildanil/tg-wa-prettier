@@ -74,7 +74,7 @@ export default defineConfig({
           `,
           button: {
             content: 'Auth',
-            path: '/paywall',
+            href: 'https://google.com'
             // click: handleAuthClick
           },
         },
