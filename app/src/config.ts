@@ -27,19 +27,42 @@ if (user) {
 
 const SERVER_URL = 'https://nameless-ravine-59157-5e1fd469c57a.herokuapp.com';
 
+// async function authenticate() {
+//   try {
+//     const response = await axios.get(`${SERVER_URL}/auth`, { withCredentials: true });
+//     return response.status === 200 ? 'success' : 'error';
+//   } catch (error) {
+//     console.error('Error during authentication:', error);
+//     return 'error';
+//   }
+// }
+
+// // Определение функции для обработки клика по кнопке
+// async function handleAuthClick() {
+//   const result = await authenticate();
+//   if (result === 'success') {
+//     window.open('https://www.google.com', '_blank'); // Перенаправление на Google
+//   } else {
+//     alert('Error during authentication'); // Временное решение: показать сообщение об ошибке
+//   }
+// }
 async function authenticate() {
+  console.log('Starting authentication process...');
   try {
     const response = await axios.get(`${SERVER_URL}/auth`, { withCredentials: true });
+    alert('Received response:' + response);
     return response.status === 200 ? 'success' : 'error';
   } catch (error) {
-    console.error('Error during authentication:', error);
+    alert('Error during authentication:' + error);
     return 'error';
   }
 }
 
 // Определение функции для обработки клика по кнопке
 async function handleAuthClick() {
+  alert('Auth button clicked...');
   const result = await authenticate();
+  alert('Authentication result:' + result);
   if (result === 'success') {
     window.open('https://www.google.com', '_blank'); // Перенаправление на Google
   } else {
