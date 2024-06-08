@@ -5,6 +5,7 @@ const tg = window.Telegram.WebApp;
 
 // Инициализация данных пользователя
 const user = tg.initDataUnsafe?.user;
+// const mainButton = tg.MainButton;
 
 let userData = {
   id: '',
@@ -36,17 +37,22 @@ async function authenticate() {
   }
 }
 
-// Определение функции для обработки клика по кнопке
+// Определение функции для обработки клика по MainButton
 async function handleAuthClick() {
   const result = await authenticate();
   if (result === 'success') {
     setTimeout(() => {
-      window.location.href = '#/paywall';
+      window.location.href = 'https://www.google.com'; // Перенаправление на Google
     }, 1000);
   } else {
     alert('Error during authentication'); // Временное решение: показать сообщение об ошибке
   }
 }
+
+// Установка текста и обработчика для MainButton
+tg.MainButton.setText('Auth');
+tg.MainButton.onClick(handleAuthClick);
+tg.MainButton.show();
 
 
 export default defineConfig({
