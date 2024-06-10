@@ -47,13 +47,19 @@ const SERVER_URL = 'https://nameless-ravine-59157-5e1fd469c57a.herokuapp.com';
 //   }
 // }
 async function authenticate() {
-  console.log('Starting authentication process...');
+  alert('Starting authentication process...');
   try {
     const response = await axios.get(`${SERVER_URL}/auth`, { withCredentials: true });
-    alert('Received response:' + response);
-    return response.status === 200 ? 'success' : 'error';
+    alert('Received response: ' + JSON.stringify(response));
+    if (response.status === 200) {
+      alert('Authentication successful');
+      return 'success';
+    } else {
+      alert('Authentication failed with status: ' + response.status);
+      return 'error';
+    }
   } catch (error) {
-    alert('Error during authentication:' + error);
+    alert('Error during authentication: ' + error);
     return 'error';
   }
 }
@@ -62,10 +68,12 @@ async function authenticate() {
 async function handleAuthClick() {
   alert('Auth button clicked...');
   const result = await authenticate();
-  alert('Authentication result:' + result);
+  alert('Authentication result: ' + result);
   if (result === 'success') {
-    window.open('https://www.google.com', '_blank'); // Перенаправление на Google
+    alert('Redirecting to paywall...');
+    // Перенаправление на страницу paywall или другая логика
   } else {
+    alert('Authentication failed, showing error alert');
     alert('Error during authentication'); // Временное решение: показать сообщение об ошибке
   }
 }
