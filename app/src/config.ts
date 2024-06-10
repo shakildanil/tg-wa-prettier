@@ -133,6 +133,12 @@ export default defineConfig({
             <br>Your username: ${userData.username}
             <br>Your ID: ${userData.id}
             <br>Your language code: ${userData.languageCode}
+            <script async src="https://telegram.org/js/telegram-widget.js?19" 
+                    data-telegram-login="your_bot_username" 
+                    data-size="large" 
+                    data-radius="10" 
+                    data-auth-url="${SERVER_URL}/auth_callback" 
+                    data-request-access="write"></script>
           `,
           button: {
             content: 'Auth',
