@@ -47,7 +47,7 @@ const SERVER_URL = 'https://nameless-ravine-59157-5e1fd469c57a.herokuapp.com';
 //   }
 // }
 async function authenticate() {
-  alert('Starting authentication process...');
+  // alert('Starting authentication process...');
   try {
     const response = await axios.get(`${SERVER_URL}/auth`, { withCredentials: true });
     alert('Received response: ' + JSON.stringify(response));
@@ -66,7 +66,7 @@ async function authenticate() {
 
 // Определение функции для обработки клика по кнопке
 async function handleAuthClick() {
-  alert('Auth button clicked...');
+  // alert('Auth button clicked...');
   const result = await authenticate();
   alert('Authentication result: ' + result);
   if (result === 'success') {
