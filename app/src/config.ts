@@ -49,7 +49,7 @@ const SERVER_URL = 'https://nameless-ravine-59157-5e1fd469c57a.herokuapp.com';
 async function authenticate() {
   // alert('Starting authentication process...');
   try {
-    const response = await axios.get(`${SERVER_URL}/auth`, { withCredentials: true });
+    const response = await axios.get(`${SERVER_URL}/oauth/callback`, { withCredentials: true });
     alert('Received response: ' + JSON.stringify(response));
     if (response.status === 200) {
       alert('Authentication successful');
