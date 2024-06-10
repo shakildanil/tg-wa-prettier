@@ -46,41 +46,68 @@ const SERVER_URL = 'https://nameless-ravine-59157-5e1fd469c57a.herokuapp.com';
 //     alert('Error during authentication'); // Временное решение: показать сообщение об ошибке
 //   }
 // }
-async function authenticate() {
-  // alert('Starting authentication process...');
+// async function authenticate() {
+//   // alert('Starting authentication process...');
+//   try {
+//     const response = await axios.get(`${SERVER_URL}/oauth/callback`, { withCredentials: true });
+//     alert('Received response: ' + JSON.stringify(response));
+//     if (response.status === 200) {
+//       alert('Authentication successful');
+//       return 'success';
+//     } else {
+//       alert('Authentication failed with status: ' + response.status);
+//       return 'error';
+//     }
+//   } catch (error) {
+//     alert('Error during authentication: ' + error);
+//     return 'error';
+//   }
+// }
+
+// // Определение функции для обработки клика по кнопке
+// async function handleAuthClick() {
+//   // alert('Auth button clicked...');
+//   const result = await authenticate();
+//   alert('Authentication result: ' + result);
+//   if (result === 'success') {
+//     alert('Redirecting to paywall...');
+//     // Перенаправление на страницу paywall или другая логика
+//   } else {
+//     alert('Authentication failed, showing error alert');
+//     alert('Error during authentication'); // Временное решение: показать сообщение об ошибке
+//   }
+// }
+
+async function getChats(userId: number | string): Promise<any[]> {
   try {
-    const response = await axios.get(`${SERVER_URL}/oauth/callback`, { withCredentials: true });
+    const response = await axios.post(`${SERVER_URL}/get_chats`, { user_id: userId });
     alert('Received response: ' + JSON.stringify(response));
     if (response.status === 200) {
-      alert('Authentication successful');
-      return 'success';
+      return response.data.chats;
     } else {
-      alert('Authentication failed with status: ' + response.status);
-      return 'error';
+      alert('Failed to get chats with status: ' + response.status);
+      return [];
     }
   } catch (error) {
-    alert('Error during authentication: ' + error);
-    return 'error';
+    alert('Error during fetching chats: ' + error);
+    return [];
   }
 }
 
 // Определение функции для обработки клика по кнопке
-async function handleAuthClick() {
-  // alert('Auth button clicked...');
-  const result = await authenticate();
-  alert('Authentication result: ' + result);
-  if (result === 'success') {
-    alert('Redirecting to paywall...');
-    // Перенаправление на страницу paywall или другая логика
+async function handleGetChatsClick(): Promise<void> {
+  const userId = userData.id;
+  const chats = await getChats(userId);
+  if (chats.length > 0) {
+    alert('Successfully retrieved chats: ' + JSON.stringify(chats));
+    // Здесь можно обновить состояние вашего Vue-компонента или выполнить другую логику
   } else {
-    alert('Authentication failed, showing error alert');
-    alert('Error during authentication'); // Временное решение: показать сообщение об ошибке
+    alert('Failed to retrieve chats or no chats available');
   }
 }
-
 // Установка текста и обработчика для MainButton
 tg.MainButton.setText('Auth trying');
-tg.MainButton.onClick(handleAuthClick);
+tg.MainButton.onClick(handleGetChatsClick);
 tg.MainButton.show();
 
 
