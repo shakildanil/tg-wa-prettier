@@ -30,7 +30,8 @@ export default defineComponent({
                 window.location.href = telegramLoginUrl;
 
                 // Изменяем текст кнопки
-                tg.MainButton.setText('Авторизация...');
+                tg.MainButton.hide();
+                // tg.MainButton.setText('Авторизация...');
                 tg.MainButton.offClick();
 
                 // Либо скрыть кнопку

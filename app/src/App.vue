@@ -1,17 +1,36 @@
 <template>
   <div id="app">
-    <TelegramLogin />
+    <UserPage v-if="user" :user="user" />
+    <TelegramLogin v-else />
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent, ref, onMounted } from 'vue';
 import TelegramLogin from './components/TelegramLogin.vue';
+import UserPage from './components/UserPage.vue';
 
 export default defineComponent({
   name: 'App',
   components: {
     TelegramLogin,
+    UserPage
+  },
+  setup() {
+    const user = ref<TelegramWebAppUser | null>(null);
+
+    onMounted(() => {
+      const tg = window.Telegram.WebApp;
+
+      // Проверка авторизации
+      if (tg.initDataUnsafe.user) {
+        user.value = tg.initDataUnsafe.user;
+      }
+    });
+
+    return {
+      user
+    };
   },
 });
 </script>
@@ -19,6 +38,8 @@ export default defineComponent({
 <style>
 /* Ваши стили */
 </style>
+
+
 
 
 <!-- <template>
