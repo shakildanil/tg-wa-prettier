@@ -23,11 +23,11 @@
       const tg = window.Telegram.WebApp;
   
       // Изменение текста кнопки и добавление обработчика клика для страницы пользователя
-      tg.MainButton.setText('ClickMe');
-      tg.MainButton.show();
-      tg.MainButton.onClick(() => {
-        alert('Clicked');
-      });
+    //   tg.MainButton.setText('ClickMe');
+    //   tg.MainButton.show();
+    //   tg.MainButton.onClick(() => {
+    //     alert('Clicked');
+    //   });
   
       return {};
     }

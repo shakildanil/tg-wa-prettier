@@ -26,11 +26,11 @@ export default defineComponent({
       if (tg.initDataUnsafe.user) {
         user.value = tg.initDataUnsafe.user;
         // Изменение текста кнопки и добавление обработчика клика для авторизованного пользователя
-        tg.MainButton.setText('ClickMe');
-        tg.MainButton.show();
-        tg.MainButton.onClick(() => {
-          alert('Clicked');
-        });
+        // tg.MainButton.setText('ClickMe');
+        tg.MainButton.hide();
+        // tg.MainButton.onClick(() => {
+        //   alert('Clicked');
+        // });
       } else {
         tg.MainButton.setText('Войти через Telegram');
         tg.MainButton.show();
