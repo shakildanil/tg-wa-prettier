@@ -27,88 +27,42 @@ if (user) {
 
 const SERVER_URL = 'https://nameless-ravine-59157-5e1fd469c57a.herokuapp.com';
 
-// async function authenticate() {
-//   try {
-//     const response = await axios.get(`${SERVER_URL}/auth`, { withCredentials: true });
-//     return response.status === 200 ? 'success' : 'error';
-//   } catch (error) {
-//     console.error('Error during authentication:', error);
-//     return 'error';
-//   }
-// }
-
-// // Определение функции для обработки клика по кнопке
-// async function handleAuthClick() {
-//   const result = await authenticate();
-//   if (result === 'success') {
-//     window.open('https://www.google.com', '_blank'); // Перенаправление на Google
-//   } else {
-//     alert('Error during authentication'); // Временное решение: показать сообщение об ошибке
-//   }
-// }
-// async function authenticate() {
-//   // alert('Starting authentication process...');
-//   try {
-//     const response = await axios.get(`${SERVER_URL}/oauth/callback`, { withCredentials: true });
-//     alert('Received response: ' + JSON.stringify(response));
-//     if (response.status === 200) {
-//       alert('Authentication successful');
-//       return 'success';
-//     } else {
-//       alert('Authentication failed with status: ' + response.status);
-//       return 'error';
-//     }
-//   } catch (error) {
-//     alert('Error during authentication: ' + error);
-//     return 'error';
-//   }
-// }
-
-// // Определение функции для обработки клика по кнопке
-// async function handleAuthClick() {
-//   // alert('Auth button clicked...');
-//   const result = await authenticate();
-//   alert('Authentication result: ' + result);
-//   if (result === 'success') {
-//     alert('Redirecting to paywall...');
-//     // Перенаправление на страницу paywall или другая логика
-//   } else {
-//     alert('Authentication failed, showing error alert');
-//     alert('Error during authentication'); // Временное решение: показать сообщение об ошибке
-//   }
-// }
-
-async function getChats(userId: number | string): Promise<any[]> {
-  try {
-    const response = await axios.post(`${SERVER_URL}/get_chats`, { user_id: userId });
-    alert('Received response: ' + JSON.stringify(response));
-    if (response.status === 200) {
-      return response.data.chats;
-    } else {
-      alert('Failed to get chats with status: ' + response.status);
-      return [];
-    }
-  } catch (error) {
-    alert('Error during fetching chats: ' + error);
-    return [];
-  }
+function onTelegramAuth(user: TelegramWebAppUser) {
+  alert('Logged in as ' + user.first_name + ' ' + user.last_name + ' (' + user.id + (user.username ? ', @' + user.username : '') + ')');
+  // Здесь можно отправить данные пользователя на сервер или выполнить другую логику
+  fetch(`${SERVER_URL}/auth_callback`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(user)
+  }).then(response => response.json())
+    .then(data => {
+      if (data.success) {
+        // Действия после успешной аутентификации, например, переход на другую страницу
+        window.location.href = '#/paywall';
+      } else {
+        alert('Authentication failed');
+      }
+    }).catch(error => {
+      alert('Error during authentication: ' + error.message);
+    });
 }
 
-// Определение функции для обработки клика по кнопке
-async function handleGetChatsClick(): Promise<void> {
-  const userId = userData.id;
-  const chats = await getChats(userId);
-  if (chats.length > 0) {
-    alert('Successfully retrieved chats: ' + JSON.stringify(chats));
-    // Здесь можно обновить состояние вашего Vue-компонента или выполнить другую логику
-  } else {
-    alert('Failed to retrieve chats or no chats available');
-  }
+function loadTelegramLoginWidget() {
+  const script = document.createElement('script');
+  script.async = true;
+  script.src = "https://telegram.org/js/telegram-widget.js?22";
+  script.setAttribute('data-telegram-login', 'channelstech_dev_bot');
+  script.setAttribute('data-size', 'medium');
+  script.setAttribute('data-onauth', 'onTelegramAuth(user)');
+  document.body.appendChild(script);
 }
-// Установка текста и обработчика для MainButton
-tg.MainButton.setText('Auth trying');
-tg.MainButton.onClick(handleGetChatsClick);
+
+tg.MainButton.setText('Auth');
+tg.MainButton.onClick(loadTelegramLoginWidget);
 tg.MainButton.show();
+
 
 
 export default defineConfig({
@@ -133,16 +87,12 @@ export default defineConfig({
             <br>Your username: ${userData.username}
             <br>Your ID: ${userData.id}
             <br>Your language code: ${userData.languageCode}
-            <script async src="https://telegram.org/js/telegram-widget.js?19" 
-                    data-telegram-login="your_bot_username" 
-                    data-size="large" 
-                    data-radius="10" 
-                    data-auth-url="${SERVER_URL}/auth_callback" 
-                    data-request-access="write"></script>
+            <br>TESTNG TLW
+            
           `,
           button: {
             content: 'Auth',
-            href: 'https://google.com'
+            // href: 'https://google.com'
             // click: handleAuthClick
           },
         },
