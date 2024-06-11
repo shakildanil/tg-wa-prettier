@@ -27,4 +27,5 @@ interface TelegramWebAppMainButton {
   hide(): void;
   setText(text: string): void;
   onClick(callback: () => void): void;
+  offClick(): void;
 }

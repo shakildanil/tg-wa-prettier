@@ -28,6 +28,15 @@ export default defineComponent({
                 const origin = window.location.origin;
                 const telegramLoginUrl = `https://oauth.telegram.org/auth?bot_id=${botId}&origin=${origin}`;
                 window.location.href = telegramLoginUrl;
+
+                // Изменяем текст кнопки
+                tg.MainButton.setText('Авторизация...');
+                tg.MainButton.offClick();
+
+                // Либо скрыть кнопку
+                // tg.MainButton.hide();
+
+                window.location.href = telegramLoginUrl;
             });
         });
 
