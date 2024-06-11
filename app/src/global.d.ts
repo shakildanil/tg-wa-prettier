@@ -1,4 +1,5 @@
 // global.d.ts
+
 interface TelegramWebAppUser {
   id: string;
   first_name: string;
@@ -12,6 +13,7 @@ interface TelegramWebApp {
     user?: TelegramWebAppUser;
   };
   MainButton: TelegramWebAppMainButton;
+  ready(): void;
 }
 
 interface Window {
