@@ -25,6 +25,15 @@ export default defineComponent({
       // Проверка авторизации
       if (tg.initDataUnsafe.user) {
         user.value = tg.initDataUnsafe.user;
+        // Изменение текста кнопки и добавление обработчика клика для авторизованного пользователя
+        tg.MainButton.setText('ClickMe');
+        tg.MainButton.show();
+        tg.MainButton.onClick(() => {
+          alert('Clicked');
+        });
+      } else {
+        tg.MainButton.setText('Войти через Telegram');
+        tg.MainButton.show();
       }
     });
 
@@ -38,16 +47,3 @@ export default defineComponent({
 <style>
 /* Ваши стили */
 </style>
-
-
-
-
-<!-- <template>
-  <root />
-</template>
-
-<script setup lang="ts">
-import './styles.scss';
-
-import { Root } from '@tok/generation';
-</script> -->
