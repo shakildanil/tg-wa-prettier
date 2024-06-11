@@ -1,6 +1,6 @@
-import { bootstrap } from '@tok/generation';
+import { createApp } from 'vue'
+// import './style.css'
+import App from './App.vue'
 
-import App from './App.vue';
-import { default as config } from './config';
-
-bootstrap(App, config);
+createApp(App).mount('#app')
+// 
