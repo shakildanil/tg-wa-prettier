@@ -16,7 +16,7 @@
   </template>
   
   <script lang="ts">
-  import { defineComponent, ref, onMounted } from 'vue';
+  import { defineComponent, ref, onMounted, PropType } from 'vue';
   import axios from 'axios';
   
   interface Group {
@@ -28,15 +28,19 @@
     name: 'UserPage',
     props: {
       user: {
-        type: Object,
+        type: Object as PropType<TelegramWebAppUser>,
         required: true
       }
     },
-    setup() {
+    setup(props) {
       const groups = ref<Group[]>([]);
   
       onMounted(async () => {
         try {
+          // Отправка данных авторизации на сервер
+          await axios.post('https://nameless-ravine-59157-5e1fd469c57a.herokuapp.com/auth', props.user);
+  
+          // Получение списка групп
           const response = await axios.get('https://nameless-ravine-59157-5e1fd469c57a.herokuapp.com/groups');
           groups.value = response.data;
         } catch (error) {
