@@ -1,5 +1,28 @@
 <template>
   <div id="app">
+    <TelegramLogin />
+  </div>
+</template>
+
+<script lang="ts">
+import { defineComponent } from 'vue';
+import TelegramLogin from './components/TelegramLogin.vue';
+
+export default defineComponent({
+  name: 'App',
+  components: {
+    TelegramLogin,
+  },
+});
+</script>
+
+<style>
+/* Ваши стили */
+</style>
+
+
+<!-- <template>
+  <div id="app">
     <UserPage v-if="user" :user="user" />
     <TelegramLogin v-else />
   </div>
@@ -46,4 +69,4 @@ export default defineComponent({
 
 <style>
 /* Ваши стили */
-</style>
+</style> -->
