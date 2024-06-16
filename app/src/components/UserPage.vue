@@ -1,5 +1,34 @@
 <template>
   <div>
+    <h1>Добро пожаловать, {{ user.first_name }}!</h1>
+    <p>Ваше имя пользователя: {{ user.username }}</p>
+    <p>Ваш идентификатор: {{ user.id }}</p>
+  </div>
+</template>
+
+<script lang="ts">
+import { defineComponent, reactive } from 'vue';
+
+export default defineComponent({
+  name: 'UserPage',
+  setup() {
+    // Здесь вы можете получать данные пользователя из localStorage или другого источника
+    const user = reactive(JSON.parse(localStorage.getItem('telegramUser') || '{}'));
+
+    return {
+      user,
+    };
+  },
+});
+</script>
+
+<style scoped>
+/* Ваши стили */
+</style>
+
+
+<!-- <template>
+  <div>
     <h1>Вы авторизованы</h1>
     <p>ID: {{ user.id }}</p>
     <p>Имя: {{ user.first_name }}</p>
@@ -63,4 +92,4 @@ export default defineComponent({
 
 <style scoped>
 /* Дополнительные стили, если нужны */
-</style>
+</style> -->

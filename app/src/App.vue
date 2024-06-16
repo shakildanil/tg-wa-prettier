@@ -1,17 +1,32 @@
 <template>
   <div id="app">
-    <TelegramLogin />
+    <component :is="currentComponent" />
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent, ref } from 'vue';
 import TelegramLogin from './components/TelegramLogin.vue';
+import UserPage from './components/UserPage.vue';
 
 export default defineComponent({
   name: 'App',
   components: {
     TelegramLogin,
+    UserPage,
+  },
+  setup() {
+    const currentComponent = ref('TelegramLogin');
+
+    // Переход к UserPage после успешной авторизации
+    const user = JSON.parse(localStorage.getItem('telegramUser') || '{}');
+    if (user.id) {
+      currentComponent.value = 'UserPage';
+    }
+
+    return {
+      currentComponent,
+    };
   },
 });
 </script>
@@ -19,6 +34,7 @@ export default defineComponent({
 <style>
 /* Ваши стили */
 </style>
+
 
 
 <!-- <template>

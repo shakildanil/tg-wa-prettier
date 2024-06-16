@@ -1,49 +1,47 @@
 <template>
-    <div>
-        <!-- Telegram login будет осуществляться через MainButton -->
-    </div>
+  <div>
+    <!-- Telegram login будет осуществляться через MainButton -->
+  </div>
 </template>
 
 <script lang="ts">
 import { defineComponent, onMounted } from 'vue';
 
 export default defineComponent({
-    name: 'TelegramLogin',
-    setup() {
-        onMounted(() => {
-            const tg = window.Telegram.WebApp;
+  name: 'TelegramLogin',
+  setup() {
+    onMounted(() => {
+      const tg = window.Telegram.WebApp;
 
-            tg.ready();
+      tg.ready();
 
-            tg.MainButton.setText('Войти через Telegram');
-            tg.MainButton.show();
+      tg.MainButton.setText('Войти через Telegram');
+      tg.MainButton.show();
 
-            // tg.MainButton.onClick(() => {
-            //     const telegramLoginUrl = "https://oauth.telegram.org/auth?bot_id=7293138530&origin=https://yourdomain.com";
-            //     window.location.href = telegramLoginUrl;
-            // });
+      tg.MainButton.onClick(() => {
+        const botId = '7293138530'; // Замените на ваш bot_id
+        const origin = window.location.origin;
+        const telegramLoginUrl = `https://oauth.telegram.org/auth?bot_id=${botId}&origin=${origin}`;
 
-            tg.MainButton.onClick(() => {
-                const botId = '7293138530'; // Замените на ваш bot_id
-                const origin = window.location.origin;
-                const telegramLoginUrl = `https://oauth.telegram.org/auth?bot_id=${botId}&origin=${origin}`;
-                window.location.href = telegramLoginUrl;
+        tg.MainButton.setText('Авторизация...');
+        tg.MainButton.offClick();
+        tg.MainButton.hide();
 
-                // Изменяем текст кнопки
-                
-                // tg.MainButton.setText('Авторизация...');
-                tg.MainButton.offClick();
-                tg.MainButton.hide();
+        // Перенаправление пользователя
+        window.location.href = telegramLoginUrl;
+      });
 
-                // Либо скрыть кнопку
-                // tg.MainButton.hide();
+      // Проверка данных пользователя после возвращения с авторизации
+      const user = tg.initDataUnsafe.user;
+      if (user) {
+        localStorage.setItem('telegramUser', JSON.stringify(user));
+        alert(user);
+        window.location.reload(); // Перезагрузка страницы для отображения UserPage
+      }
+    });
 
-                window.location.href = telegramLoginUrl;
-            });
-        });
-
-        return {};
-    },
+    return {};
+  },
 });
 </script>
 
