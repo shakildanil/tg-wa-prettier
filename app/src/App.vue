@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <component :is="currentComponent" />
+    <component :is="currentComponent" :user="user" />
   </div>
 </template>
 
@@ -17,16 +17,18 @@ export default defineComponent({
   },
   setup() {
     const currentComponent = ref('TelegramLogin');
+    const user = ref(null);
 
     // Переход к UserPage после успешной авторизации
-    const user = JSON.parse(localStorage.getItem('telegramUser') || '{}');
-    console.log(user)
-    if (user.id) {
+    const storedUser = JSON.parse(localStorage.getItem('telegramUser') || '{}');
+    if (storedUser.id) {
+      user.value = storedUser;
       currentComponent.value = 'UserPage';
     }
 
     return {
       currentComponent,
+      user,
     };
   },
 });
@@ -35,6 +37,7 @@ export default defineComponent({
 <style>
 /* Ваши стили */
 </style>
+
 
 
 
