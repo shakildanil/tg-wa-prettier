@@ -11,6 +11,8 @@ interface TelegramWebAppUser {
 interface TelegramWebApp {
   initDataUnsafe: {
     user?: TelegramWebAppUser;
+    auth_date?: string;
+    hash?: string;
   };
   MainButton: TelegramWebAppMainButton;
   ready(): void;

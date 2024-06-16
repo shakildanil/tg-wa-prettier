@@ -33,9 +33,19 @@ export default defineComponent({
 
       // Проверка данных пользователя после возвращения с авторизации
       const user = tg.initDataUnsafe.user;
-      if (user) {
-        localStorage.setItem('telegramUser', JSON.stringify(user));
-        alert(user);
+      const authDate = tg.initDataUnsafe.auth_date;
+      const hash = tg.initDataUnsafe.hash;
+      
+      if (user && authDate && hash) {
+        const authData = {
+          id: user.id,
+          first_name: user.first_name,
+          last_name: user.last_name,
+          username: user.username,
+          auth_date: authDate,
+          hash: hash
+        };
+        localStorage.setItem('telegramUser', JSON.stringify(authData));
         window.location.reload(); // Перезагрузка страницы для отображения UserPage
       }
     });

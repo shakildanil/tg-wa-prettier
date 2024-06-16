@@ -34,7 +34,6 @@ export default defineComponent({
     onMounted(async () => {
       try {
         // Отправка данных авторизации на сервер
-        console.log(props.user)
         await axios.post('https://nameless-ravine-59157-5e1fd469c57a.herokuapp.com/auth', props.user);
 
         // Проверка данных авторизации
@@ -61,6 +60,7 @@ export default defineComponent({
 <style scoped>
 /* Ваши стили */
 </style>
+
 
 
 <!-- <template>
