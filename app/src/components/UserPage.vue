@@ -44,7 +44,7 @@ export default defineComponent({
       console.log('TelegramLogin id:' + localStorage.telegramUser.id)
       try {
         // Отправка данных авторизации на сервер
-        await axios.post('https://nameless-ravine-59157-5e1fd469c57a.herokuapp.com/auth', userData);
+        await axios.post('https://nameless-ravine-59157-5e1fd469c57a.herokuapp.com/auth', props.user);
 
         // Проверка данных авторизации
         const validateResponse = await axios.get('https://nameless-ravine-59157-5e1fd469c57a.herokuapp.com/validate');
