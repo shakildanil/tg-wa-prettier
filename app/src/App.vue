@@ -23,7 +23,7 @@ export default defineComponent({
     const storedUser = JSON.parse(localStorage.getItem('telegramUser') || '{}');
     if (storedUser.id) {
       user.value = storedUser;
-      currentComponent.value = 'UserPage';
+      // currentComponent.value = 'UserPage';
     }
 
     return {

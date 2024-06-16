@@ -49,6 +49,7 @@ export default defineComponent({
           hash: hash
         };
         localStorage.setItem('telegramUser', JSON.stringify(authData));
+        console.log('TelegramLogin:' + authData)
         window.location.reload(); // Перезагрузка страницы для отображения UserPage
       }
     });
