@@ -20,6 +20,7 @@ export default defineComponent({
 
     // Переход к UserPage после успешной авторизации
     const user = JSON.parse(localStorage.getItem('telegramUser') || '{}');
+    console.log(user)
     if (user.id) {
       currentComponent.value = 'UserPage';
     }
