@@ -13,6 +13,9 @@ export default defineComponent({
     onMounted(() => {
       const tg = window.Telegram.WebApp;
 
+      // Очистка localStorage при загрузке компонента, чтобы сбросить авторизацию
+      localStorage.removeItem('telegramUser');
+
       tg.ready();
 
       tg.MainButton.setText('Войти через Telegram');
