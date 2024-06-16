@@ -33,6 +33,7 @@ export default defineComponent({
 
     onMounted(async () => {
       const ls = localStorage.getItem('telegramUser')
+      console.log('LS:' + ls)
       const userData = ls ? JSON.parse(ls) : null;
       console.log('USERDATA:' + userData)
       const hash = userData ? userData.hash : null;
