@@ -33,9 +33,10 @@ export default defineComponent({
 
     onMounted(async () => {
 
+      console.log('LocalStorage:' + JSON.parse(localStorage.getItem('telegramUser') || '{}'));
       console.log('TelegramLogin HASH:' + localStorage.telegramUser.hash)
-        console.log('TelegramLogin auth_date:' + localStorage.telegramUser.auth_date)
-        console.log('TelegramLogin id:' + localStorage.telegramUser.id)
+      console.log('TelegramLogin auth_date:' + localStorage.telegramUser.auth_date)
+      console.log('TelegramLogin id:' + localStorage.telegramUser.id)
       try {
         // Отправка данных авторизации на сервер
         await axios.post('https://nameless-ravine-59157-5e1fd469c57a.herokuapp.com/auth', props.user);
