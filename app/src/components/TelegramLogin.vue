@@ -50,7 +50,7 @@ export default defineComponent({
         };
         localStorage.setItem('telegramUser', JSON.stringify(authData));
         console.log('TelegramLogin:' + authData)
-        window.location.reload(); // Перезагрузка страницы для отображения UserPage
+        // window.location.reload(); // Перезагрузка страницы для отображения UserPage
       }
     });
 
