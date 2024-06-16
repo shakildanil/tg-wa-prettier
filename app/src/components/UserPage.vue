@@ -33,7 +33,7 @@ export default defineComponent({
 
     onMounted(async () => {
 
-      console.log('LocalStorage:' + JSON.parse(localStorage.getItem('telegramUser') || '{}'));
+      console.log('LocalStorage:' + localStorage.getItem('telegramUser') || '{}');
       console.log('TelegramLogin HASH:' + localStorage.telegramUser.hash)
       console.log('TelegramLogin auth_date:' + localStorage.telegramUser.auth_date)
       console.log('TelegramLogin id:' + localStorage.telegramUser.id)
