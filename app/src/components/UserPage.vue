@@ -32,9 +32,12 @@ export default defineComponent({
     const groups = ref<Group[]>([]);
 
     onMounted(async () => {
-
+      const ls = localStorage.getItem('telegramUser')
+      const userData = ls ? JSON.parse(ls) : null;
+      const hash = userData ? userData.hash : null;
+      console.log('Props:' + props);
       console.log('LocalStorage:' + localStorage.getItem('telegramUser') || '{}');
-      console.log('TelegramLogin HASH:' + localStorage.telegramUser.hash)
+      console.log('TelegramLogin HASH:' + hash)
       console.log('TelegramLogin auth_date:' + localStorage.telegramUser.auth_date)
       console.log('TelegramLogin id:' + localStorage.telegramUser.id)
       try {
