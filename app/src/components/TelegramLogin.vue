@@ -38,6 +38,7 @@ export default defineComponent({
       // Использование data-onauth callback для получения данных авторизации
       if (typeof tg.onAuth === 'function') {
         tg.onAuth((authData) => {
+          console.log('AuthData from onAuth callback:', authData); // Логирование данных авторизации
           if (authData && authData.hash) {
             localStorage.setItem('telegramUser', JSON.stringify(authData));
             emit('loginSuccess', authData); // Передача данных в App.vue
