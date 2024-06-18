@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <component :is="currentComponent" :user="user" />
+    <component :is="currentComponent" :user="user" @loginSuccess="handleLoginSuccess" />
   </div>
 </template>
 
@@ -8,6 +8,16 @@
 import { defineComponent, ref } from 'vue';
 import TelegramLogin from './components/TelegramLogin.vue';
 import UserPage from './components/UserPage.vue';
+
+interface TelegramAuthData {
+  id: string;
+  first_name: string;
+  last_name?: string;
+  username?: string;
+  language_code: string;
+  auth_date: string;
+  hash: string;
+}
 
 export default defineComponent({
   name: 'App',
@@ -17,18 +27,17 @@ export default defineComponent({
   },
   setup() {
     const currentComponent = ref('TelegramLogin');
-    const user = ref(null);
+    const user = ref<TelegramAuthData | null>(null);
 
-    // Переход к UserPage после успешной авторизации
-    const storedUser = JSON.parse(localStorage.getItem('telegramUser') || '{}');
-    if (storedUser.id) {
-      user.value = storedUser;
+    const handleLoginSuccess = (userData: TelegramAuthData) => {
+      user.value = userData;
       currentComponent.value = 'UserPage';
-    }
+    };
 
     return {
       currentComponent,
       user,
+      handleLoginSuccess,
     };
   },
 });
@@ -37,58 +46,3 @@ export default defineComponent({
 <style>
 /* Ваши стили */
 </style>
-
-
-
-
-
-
-<!-- <template>
-  <div id="app">
-    <UserPage v-if="user" :user="user" />
-    <TelegramLogin v-else />
-  </div>
-</template>
-
-<script lang="ts">
-import { defineComponent, ref, onMounted } from 'vue';
-import TelegramLogin from './components/TelegramLogin.vue';
-import UserPage from './components/UserPage.vue';
-
-export default defineComponent({
-  name: 'App',
-  components: {
-    TelegramLogin,
-    UserPage
-  },
-  setup() {
-    const user = ref<TelegramWebAppUser | null>(null);
-
-    onMounted(() => {
-      const tg = window.Telegram.WebApp;
-
-      // Проверка авторизации
-      if (tg.initDataUnsafe.user) {
-        user.value = tg.initDataUnsafe.user;
-        // Изменение текста кнопки и добавление обработчика клика для авторизованного пользователя
-        // tg.MainButton.setText('ClickMe');
-        tg.MainButton.hide();
-        // tg.MainButton.onClick(() => {
-        //   alert('Clicked');
-        // });
-      } else {
-        tg.MainButton.setText('Войти через Telegram');
-        tg.MainButton.show();
-      }
-    });
-
-    return {
-      user
-    };
-  },
-});
-</script>
-
-<style>
-/* Ваши стили */
-</style> -->

@@ -9,7 +9,8 @@ import { defineComponent, onMounted } from 'vue';
 
 export default defineComponent({
   name: 'TelegramLogin',
-  setup() {
+  emits: ['loginSuccess'],
+  setup(_, { emit }) {
     onMounted(() => {
       const tg = window.Telegram.WebApp;
 
@@ -34,25 +35,32 @@ export default defineComponent({
         window.location.href = telegramLoginUrl;
       });
 
-      // Проверка данных пользователя после возвращения с авторизации
+      // Использование data-onauth callback для получения данных авторизации
+      if (typeof tg.onAuth === 'function') {
+        tg.onAuth((authData) => {
+          if (authData && authData.hash) {
+            localStorage.setItem('telegramUser', JSON.stringify(authData));
+            emit('loginSuccess', authData); // Передача данных в App.vue
+          }
+        });
+      }
+
+      // Проверка данных пользователя после возвращения с авторизации через initDataUnsafe
       const user = tg.initDataUnsafe.user;
       const authDate = tg.initDataUnsafe.auth_date;
       const hash = tg.initDataUnsafe.hash;
       
       if (user && authDate && hash) {
         const authData = {
-          id: user.id,
-          first_name: user.first_name,
-          last_name: user.last_name,
-          username: user.username,
+          ...user,
           auth_date: authDate,
           hash: hash
         };
         localStorage.setItem('telegramUser', JSON.stringify(authData));
-        console.log('TelegramLogin HASH:' + authData.hash)
-        console.log('TelegramLogin auth_date:' + authData.auth_date)
-        console.log('TelegramLogin id:' + authData.id)
-        window.location.reload(); // Перезагрузка страницы для отображения UserPage
+        console.log('TelegramLogin HASH:', authData.hash);
+        console.log('TelegramLogin auth_date:', authData.auth_date);
+        console.log('TelegramLogin id:', authData.id);
+        emit('loginSuccess', authData); // Передача данных в App.vue
       }
     });
 

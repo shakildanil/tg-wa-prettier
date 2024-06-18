@@ -1,5 +1,3 @@
-// global.d.ts
-
 interface TelegramWebAppUser {
   id: string;
   first_name: string;
@@ -8,14 +6,22 @@ interface TelegramWebAppUser {
   language_code: string;
 }
 
+interface TelegramAuthData extends TelegramWebAppUser {
+  auth_date: string;
+  hash: string;
+}
+
+interface TelegramWebAppInitData {
+  user?: TelegramWebAppUser;
+  auth_date?: string;
+  hash?: string;
+}
+
 interface TelegramWebApp {
-  initDataUnsafe: {
-    user?: TelegramWebAppUser;
-    auth_date?: string;
-    hash?: string;
-  };
+  initDataUnsafe: TelegramWebAppInitData;
   MainButton: TelegramWebAppMainButton;
   ready(): void;
+  onAuth?: (callback: (authData: TelegramAuthData) => void) => void;
 }
 
 interface Window {
