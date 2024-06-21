@@ -7,6 +7,7 @@
 <script lang="ts">
 import { defineComponent, onMounted } from 'vue';
 import axios from 'axios';
+import * as CryptoJS from 'crypto';
 
 interface TelegramWebAppUser {
   id: string;
@@ -52,6 +53,8 @@ declare global {
 export default defineComponent({
   name: 'App',
   setup() {
+    const botToken = '<your_bot_token>'; // Замените на ваш bot token
+
     onMounted(() => {
       const tg = window.Telegram.WebApp;
 
@@ -78,21 +81,31 @@ export default defineComponent({
           };
           console.log('Logged in as', authData.first_name, authData.last_name, `(${authData.id}${authData.username ? ', @' + authData.username : ''})`, authData.hash);
 
-          try {
-            // Отправка данных авторизации на сервер
-            await axios.post('https://nameless-ravine-59157-5e1fd469c57a.herokuapp.com/auth', authData);
+          // Проверка авторизации
+          const dataCheckString = `auth_date=${authData.auth_date}\nfirst_name=${authData.first_name}\nid=${authData.id}\n${authData.username ? `username=${authData.username}\n` : ''}`;
+          const secretKey = CryptoJS.SHA256(botToken).toString(CryptoJS.enc.Hex);
+          const computedHash = CryptoJS.HmacSHA256(dataCheckString, secretKey).toString(CryptoJS.enc.Hex);
 
-            // Проверка данных авторизации
-            const validateResponse = await axios.get('https://nameless-ravine-59157-5e1fd469c57a.herokuapp.com/validate');
-            if (validateResponse.data !== 'User authorized') {
-              throw new Error('User not authorized');
+          if (computedHash === authData.hash) {
+            console.log('Data is from Telegram');
+            try {
+              // Отправка данных авторизации на сервер
+              await axios.post('https://nameless-ravine-59157-5e1fd469c57a.herokuapp.com/auth', authData);
+
+              // Проверка данных авторизации
+              const validateResponse = await axios.get('https://nameless-ravine-59157-5e1fd469c57a.herokuapp.com/validate');
+              if (validateResponse.data !== 'User authorized') {
+                throw new Error('User not authorized');
+              }
+
+              // Получение списка групп
+              const response = await axios.get('https://nameless-ravine-59157-5e1fd469c57a.herokuapp.com/groups');
+              console.log('Groups:', response.data);
+            } catch (error) {
+              console.error('Error during authorization process:', error);
             }
-
-            // Получение списка групп
-            const response = await axios.get('https://nameless-ravine-59157-5e1fd469c57a.herokuapp.com/groups');
-            console.log('Groups:', response.data);
-          } catch (error) {
-            console.error('Error during authorization process:', error);
+          } else {
+            console.error('Data is not from Telegram');
           }
         } else {
           console.error('User data not found in initDataUnsafe');
@@ -113,55 +126,3 @@ export default defineComponent({
   margin-top: 60px;
 }
 </style>
-
-
-
-
-<!-- <template>
-  <div id="app">
-    <component :is="currentComponent" :user="user" @loginSuccess="handleLoginSuccess" />
-  </div>
-</template>
-
-<script lang="ts">
-import { defineComponent, ref } from 'vue';
-import TelegramLogin from './components/TelegramLogin.vue';
-import UserPage from './components/UserPage.vue';
-
-interface TelegramAuthData {
-  id: string;
-  first_name: string;
-  last_name?: string;
-  username?: string;
-  language_code: string;
-  auth_date: string;
-  hash: string;
-}
-
-export default defineComponent({
-  name: 'App',
-  components: {
-    TelegramLogin,
-    UserPage,
-  },
-  setup() {
-    const currentComponent = ref('TelegramLogin');
-    const user = ref<TelegramAuthData | null>(null);
-
-    const handleLoginSuccess = (userData: TelegramAuthData) => {
-      user.value = userData;
-      currentComponent.value = 'UserPage';
-    };
-
-    return {
-      currentComponent,
-      user,
-      handleLoginSuccess,
-    };
-  },
-});
-</script>
-
-<style>
-/* Ваши стили */
-</style> -->
