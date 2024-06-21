@@ -6,6 +6,7 @@
 
 <script lang="ts">
 import { defineComponent, onMounted } from 'vue';
+import axios from 'axios';
 
 interface TelegramWebAppUser {
   id: string;
@@ -59,7 +60,7 @@ export default defineComponent({
       tg.MainButton.setText('Войти через Telegram');
       tg.MainButton.show();
 
-      tg.MainButton.onClick(() => {
+      tg.MainButton.onClick(async () => {
         tg.MainButton.setText('Авторизация...');
         tg.MainButton.offClick();
         tg.MainButton.hide();
@@ -70,12 +71,29 @@ export default defineComponent({
         const hash = tg.initDataUnsafe.hash;
 
         if (user && authDate && hash) {
-          const authData = {
+          const authData: TelegramAuthData = {
             ...user,
             auth_date: authDate,
             hash: hash,
           };
           console.log('Logged in as', authData.first_name, authData.last_name, `(${authData.id}${authData.username ? ', @' + authData.username : ''})`, authData.hash);
+
+          try {
+            // Отправка данных авторизации на сервер
+            await axios.post('https://nameless-ravine-59157-5e1fd469c57a.herokuapp.com/auth', authData);
+
+            // Проверка данных авторизации
+            const validateResponse = await axios.get('https://nameless-ravine-59157-5e1fd469c57a.herokuapp.com/validate');
+            if (validateResponse.data !== 'User authorized') {
+              throw new Error('User not authorized');
+            }
+
+            // Получение списка групп
+            const response = await axios.get('https://nameless-ravine-59157-5e1fd469c57a.herokuapp.com/groups');
+            console.log('Groups:', response.data);
+          } catch (error) {
+            console.error('Error during authorization process:', error);
+          }
         } else {
           console.error('User data not found in initDataUnsafe');
         }
@@ -95,6 +113,7 @@ export default defineComponent({
   margin-top: 60px;
 }
 </style>
+
 
 
 
