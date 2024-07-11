@@ -1,0 +1,10 @@
+:root {
+  --tok-padding-l: 1.5rem;
+  --tok-primary: #e3ff2b;
+  --tok-primary-text: var(--tok-dark);
+}
+
+html[data-theme=dark] {
+  --tok-primary: #e3ff2b;
+  --tok-primary-text: var(--tok-dark);
+}/*# sourceMappingURL=styles.css.map */
