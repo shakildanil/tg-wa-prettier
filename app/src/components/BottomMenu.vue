@@ -2,22 +2,22 @@
   <div class="bottomMenu">
     <div 
       class="menu-item" 
-      @click="setActive('user')" 
-      :class="{ active: activeButton === 'user' }"
+      @click="setActive('profile')" 
+      :class="{ active: activeButton === 'profile' }"
     >
       <img src="../assets/icons/userIcon.svg" alt="User Icon" />
     </div>
     <div 
       class="menu-item" 
-      @click="setActive('link')" 
-      :class="{ active: activeButton === 'link' }"
+      @click="setActive('channels')" 
+      :class="{ active: activeButton === 'channels' }"
     >
       <img src="../assets/icons/linkIcon.svg" alt="Link Icon" />
     </div>
     <div 
       class="menu-item" 
-      @click="setActive('coin')" 
-      :class="{ active: activeButton === 'coin' }"
+      @click="setActive('portfolio')" 
+      :class="{ active: activeButton === 'portfolio' }"
     >
       <img src="../assets/icons/coinIcon.svg" alt="Coin Icon" />
     </div>
@@ -30,13 +30,18 @@ export default {
   props: {
     defaultActive: {
       type: String,
-      default: 'user'
+      default: 'profile'
     }
   },
   data() {
     return {
       activeButton: this.defaultActive
     };
+  },
+  watch: {
+    defaultActive(newVal) {
+      this.activeButton = newVal;
+    }
   },
   methods: {
     setActive(button) {
