@@ -1,26 +1,52 @@
 <template>
   <div class="background">
     <div class="profilePic"></div>
-    <div class="user-info">
-      Иван Иванов | @ivanov
-    </div>
+    <div class="user-info">Иван Иванов | @ivanov</div>
     <div class="info-block">
-      <LinkInput />
-      <ChannelSelect />
+      <!-- <LinkInput /> -->
+      <div v-for="channelData in userChannels" :key="channelData.channel_id">
+        <!-- Добавлена проверка на наличие channelData -->
+        <ChannelSelect
+          v-if="channelData && channelData.title"
+          :title="channelData.title"
+          :link="channelData.link"
+          :profilePhotoUrl="channelData.profilePhoto ? channelData.profilePhoto[0].url : ''"
+          :ev="channelData.EV || 'N/A'" 
+          :members="channelData.members || 'N/A'"
+          :channelId="channelData.channel_id"
+          :sector="channelData.sector"
+        />
+      </div>
     </div>
   </div>
 </template>
 
 <script>
-import LinkInput from './LinkInput.vue';
-import ChannelSelect from './ChannelSelect.vue'
+// import LinkInput from './LinkInput.vue';
+import ChannelSelect from "./ChannelSelect.vue";
+import { getUserChannels } from "../scripts/channels";
 
 export default {
-  name: 'UserProfile',
+  name: "UserProfile",
   components: {
-    LinkInput,
-    ChannelSelect
-  }
+    // LinkInput,
+    ChannelSelect,
+  },
+  data() {
+    return {
+      userChannels: [],
+    };
+  },
+  async created() {
+    try {
+      const tgID = "172136731";
+      const userChannels = await getUserChannels(tgID);
+      console.log("User channels:", userChannels);
+      this.userChannels = userChannels;
+    } catch (error) {
+      console.error("Failed to fetch user channels:", error);
+    }
+  },
 };
 </script>
 
@@ -35,7 +61,7 @@ export default {
 }
 
 .profilePic {
-  background: url('../assets/img/durov.webp');
+  background: url("../assets/img/durov.webp");
   width: 100%;
   height: 50%;
   background-repeat: no-repeat;
@@ -53,7 +79,7 @@ export default {
   bottom: 0;
   width: 100%;
   height: 70%;
-  background: #F9F8FA;
+  background: #f9f8fa;
   border-radius: 20px 20px 0 0;
   padding: 20px 20px 0 20px;
   display: flex;

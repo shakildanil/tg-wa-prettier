@@ -55,6 +55,7 @@ export default {
 <style scoped>
 .bottomMenu {
   position: fixed;
+  z-index: 10000;
   bottom: 30px;
   left: 50%;
   transform: translateX(-50%);

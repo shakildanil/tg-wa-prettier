@@ -41,8 +41,10 @@
         "packages/*"
     ],
     "dependencies": {
+        "airtable": "^0.12.2",
         "axios": "^1.7.2",
         "crypto-js": "^4.2.0",
+        "dotenv": "^16.4.5",
         "swiper": "^11.1.4"
     }
 }
