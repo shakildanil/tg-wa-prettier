@@ -1,5 +1,6 @@
 import Airtable from "airtable";
 import axios from "axios";
+import { sectors } from '../scripts/sectors';
 
 const AIRTABLE_API_KEY = import.meta.env.VITE_APP_AIRTABLE_API_KEY;
 const AIRTABLE_BASE_ID = import.meta.env.VITE_APP_AIRTABLE_BASE_ID;
@@ -53,42 +54,61 @@ export async function getUserChannels(tgID) {
 
 export async function updateChannelDataEV(channel_id, link, sector) {
   try {
-    console.log('Starting update for channel:', channel_id, link, sector);
+    console.log("Starting update for channel:", channel_id, link, sector);
 
     // Извлечь username из link
-    const username = link.split('/').pop();
+    const username = link.split("/").pop();
     if (!username) {
-      throw new Error('Invalid link format');
+      throw new Error("Invalid link format");
     }
-    console.log('Extracted username:', username);
+    console.log("Extracted username:", username);
 
     // Сделать GET-запрос на API
-    const response = await axios.get(`https://channelsio-ce-4225c1e02412.herokuapp.com/parse/${username}/${sector}`);
-    const { ev } = response.data;
-    console.log('Received EV from API:', ev);
+    const response = await axios.get(
+      `https://channelsio-ce-4225c1e02412.herokuapp.com/parse/${username}/${sector}`
+    );
+    let { ev } = response.data;
+    console.log("Received EV from API:", ev);
 
     // Найти запись по channel_id
     const channelsTable = base("Channels");
-    const records = await channelsTable.select({
-      filterByFormula: `{channel_id} = "${channel_id}"`,
-      maxRecords: 1,
-    }).firstPage();
+    const records = await channelsTable
+      .select({
+        filterByFormula: `{channel_id} = "${channel_id}"`,
+        maxRecords: 1,
+      })
+      .firstPage();
 
     if (records.length === 0) {
       throw new Error(`Channel with channel_id ${channel_id} not found`);
     }
 
     const recordId = records[0].id;
-    console.log('Found record ID:', recordId);
+    const members = records[0].fields.members; // Предполагается, что members хранится в записи
+    console.log("Found record ID:", recordId);
+    console.log("Members:", members);
+
+    // Проверка и расчет EV
+    if (!ev || ev === 0 || ev === "0" || ev === "N/A" || ev === null) {
+      const sectorData = sectors[sector];
+      if (sectorData) {
+        ev = members * sectorData.av_cost;
+        console.log("Calculated EV:", ev);
+      } else {
+        ev = "N/A"; // В случае если sectorData не найден
+      }
+    }
 
     // Обновить запись Channel с новым sector и EV
     await channelsTable.update(recordId, {
-      "sector": sector,
-      "EV": ev
+      sector: sector,
+      EV: ev,
     });
 
-    console.log(`Channel ${channel_id} updated with sector: ${sector}, ev: ${ev}`);
-    return ev; 
+    console.log(
+      `Channel ${channel_id} updated with sector: ${sector}, ev: ${ev}`
+    );
+    return ev;
   } catch (error) {
     console.error("Error updating channel data:", error);
     throw error;

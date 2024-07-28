@@ -3,7 +3,7 @@
     <div class="channel-header">
       <img :src="profilePhotoUrl || '../assets/img/spongebob_poster.webp'" alt="Avatar" class="avatar">
       <h3 class="channel-title">{{ title }}</h3>
-      <span class="ev-value">EV: {{ typeof currentEV === 'number' ? currentEV.toFixed(2) + '$' : 'N/A' }}</span>
+      <span class="ev-value">Value: {{ typeof currentEV === 'number' ? currentEV.toFixed(2) + '$' : 'N/A' }}</span>
       <span class="icon-container" @click.stop="toggleOpen">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" :class="{ open: isOpen }">
           <path d="M6 9L12 15L18 9" stroke="#C4C4C4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -102,7 +102,9 @@ export default {
       try {
         const newEv = await updateChannelDataEV(props.channelId, props.link, key);
         console.log(`Updated channel ${props.channelId} with sector ${key} and new EV: ${newEv}`);
+
         currentEV.value = newEv;
+        console.log('NewEV:'+ newEv)
       } catch (error) {
         console.error("Error updating channel data:", error);
       }
