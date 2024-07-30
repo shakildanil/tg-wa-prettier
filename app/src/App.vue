@@ -7,6 +7,7 @@
 import BottomMenu from './components/BottomMenu.vue';
 import UserProfile from './components/UserProfile.vue';
 import SecondWindow from './components/SecondWindow.vue';
+import OrderPanel from './components/OrderPanel.vue';
 
 export default {
   name: 'App',
@@ -28,7 +29,7 @@ export default {
       return {
         profile: UserProfile,
         channels: SecondWindow,
-        portfolio: UserProfile 
+        portfolio: OrderPanel 
       };
     }
   },
