@@ -16,7 +16,7 @@
           <p>{{ link }}</p>
           <p class="subscribers">{{ formatMembers(members) }}</p>
         </div>
-        <div class="select-container">
+        <div v-if="!isPublished" class="select-container">
           <div class="select-header" @click="toggleSelect" :class="{ placeholder: !selectedSector }">
             <p :class="{ active: selectedSector || sector }">
               {{ selectedSector ? sectors[selectedSector].ru_transcr : (sector ? sectors[sector].ru_transcr : 'Выбрать категорию') }}
@@ -33,7 +33,13 @@
             </div>
           </transition>
         </div>
-        <button :disabled="!selectedSector" class="publish-button">Опубликовать</button>
+        <div v-if="!isPublished">
+          <button :disabled="!selectedSector" class="publish-button" @click="publishChannel">Опубликовать</button>
+        </div>
+        <div v-else class="trade-buttons">
+          <button class="buy-button">Buy</button>
+          <button class="sell-button">Sell</button>
+        </div>
       </div>
     </transition>
   </div>
@@ -42,7 +48,7 @@
 <script>
 import { ref, reactive } from 'vue';
 import { sectors } from '../scripts/sectors';
-import { updateChannelDataEV } from '../scripts/channels';
+import { updateChannelDataEV, updateChannelPublish } from '../scripts/channels';
 
 export default {
   name: "ChannelSelect",
@@ -78,12 +84,16 @@ export default {
       type: String,
       required: false,
       default: ''
+    },
+    isPublished: {
+      type: Boolean,
+      required: true
     }
   },
   setup(props) {
     const isOpen = ref(false);
     const isSelectOpen = ref(false);
-    const selectedSector = ref(props.sector || ""); // Используем сектор из пропсов или пустое значение
+    const selectedSector = ref(props.sector || "");
     const sectorsData = reactive(sectors);
     const currentEV = ref(parseFloat(props.ev) || 'N/A');
 
@@ -104,9 +114,19 @@ export default {
         console.log(`Updated channel ${props.channelId} with sector ${key} and new EV: ${newEv}`);
 
         currentEV.value = newEv;
-        console.log('NewEV:'+ newEv)
+        console.log('NewEV:', newEv);
       } catch (error) {
         console.error("Error updating channel data:", error);
+      }
+    };
+
+    const publishChannel = async () => {
+      try {
+        const totalSupply = 10000;
+        await updateChannelPublish(props.channelId, totalSupply);
+        console.log(`Channel ${props.channelId} published with total supply: ${totalSupply}`);
+      } catch (error) {
+        console.error("Error publishing channel:", error);
       }
     };
 
@@ -128,6 +148,7 @@ export default {
       isSelectOpen,
       toggleSelect,
       selectSector,
+      publishChannel,
       formatMembers,
       currentEV
     };
@@ -280,6 +301,35 @@ export default {
 
 .publish-button:hover:enabled {
   background: #dadada;
+}
+
+.trade-buttons {
+  display: flex;
+  width: 100%;
+}
+
+.buy-button, .sell-button {
+  flex: 1;
+  padding: 10px;
+  font-family: Montserrat, sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 22px;
+  text-align: center;
+  cursor: pointer;
+  border: none;
+}
+
+.buy-button {
+  background-color: #007bff; /* Синий цвет */
+  color: white;
+  border-radius: 0 0 0 12px;
+}
+
+.sell-button {
+  background-color: #dc3545; /* Красный цвет */
+  color: white;
+  border-radius: 0 0 12px 0;
 }
 
 .slide-fade-enter-active,

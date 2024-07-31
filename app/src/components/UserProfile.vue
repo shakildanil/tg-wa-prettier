@@ -3,9 +3,7 @@
     <div class="profilePic"></div>
     <div class="user-info">Иван Иванов | @ivanov</div>
     <div class="info-block">
-      <!-- <LinkInput /> -->
       <div v-for="channelData in userChannels" :key="channelData.channel_id">
-        <!-- Добавлена проверка на наличие channelData -->
         <ChannelSelect
           v-if="channelData && channelData.title"
           :title="channelData.title"
@@ -15,6 +13,7 @@
           :members="channelData.members || 'N/A'"
           :channelId="channelData.channel_id"
           :sector="channelData.sector"
+          :isPublished="channelData.isPublished"
         />
       </div>
     </div>
@@ -22,14 +21,12 @@
 </template>
 
 <script>
-// import LinkInput from './LinkInput.vue';
 import ChannelSelect from "./ChannelSelect.vue";
 import { getUserChannels } from "../scripts/channels";
 
 export default {
   name: "UserProfile",
   components: {
-    // LinkInput,
     ChannelSelect,
   },
   data() {
@@ -40,9 +37,22 @@ export default {
   async created() {
     try {
       const tgID = "172136731";
-      const userChannels = await getUserChannels(tgID);
-      console.log("User channels:", userChannels);
-      this.userChannels = userChannels;
+      const localStorageKey = `userChannels_${tgID}`;
+
+      // Попробовать получить данные из localStorage
+      const cachedChannels = localStorage.getItem(localStorageKey);
+      if (cachedChannels) {
+        this.userChannels = JSON.parse(cachedChannels);
+        console.log("Loaded channels from local storage:", this.userChannels);
+      } else {
+        // Если в localStorage нет данных, загрузить с сервера
+        const userChannels = await getUserChannels(tgID);
+        console.log("User channels:", userChannels);
+        this.userChannels = userChannels;
+
+        // Сохранить данные в localStorage
+        localStorage.setItem(localStorageKey, JSON.stringify(userChannels));
+      }
     } catch (error) {
       console.error("Failed to fetch user channels:", error);
     }
@@ -67,11 +77,6 @@ export default {
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center center;
-}
-
-.background-image {
-  width: 100%;
-  height: auto;
 }
 
 .info-block {
