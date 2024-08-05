@@ -6,6 +6,7 @@
 <script>
 import BottomMenu from './components/BottomMenu.vue';
 import HomePage from './pages/HomePage.vue';
+import PortfolioDiscoverPage from './pages/PortfolioDiscoverPage.vue'
 // import SecondWindow from './components/SecondWindow.vue';
 // import OrderPanel from './components/OrderPanel.vue';
 
@@ -13,6 +14,7 @@ export default {
   name: 'App',
   components: {
     HomePage,
+    PortfolioDiscoverPage,
     // SecondWindow,
     // OrderPanel,
     BottomMenu
@@ -29,6 +31,7 @@ export default {
     pages() {
       return {
         home: HomePage,
+        portfolio_discover: PortfolioDiscoverPage
         // channels: SecondWindow,
         // portfolio: OrderPanel
       };

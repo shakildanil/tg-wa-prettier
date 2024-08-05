@@ -3,8 +3,8 @@
         <h1>Recently published</h1>
         <div class="published__list">
             <div class="published__list_item" v-for="item in latestItems" :key="item.id">
-                <img :src="item.image" :alt="item.name">
-                <p>{{ item.name }}</p>
+                    <img :src="item.image" :alt="item.name">
+                    <p>{{ item.name }}</p>
               </div>
         </div>
     </div>
@@ -47,6 +47,7 @@
         font-weight: 500;
         font-size: 18px;
         line-height: 22px;
+        margin-bottom: 10px;
     }
 
     .published__list {
@@ -57,6 +58,9 @@
         justify-content: space-between;
         align-items: center;
         gap: 20px;
+        background: #ffffff;
+
+        border-radius: 12px;
     }
 
     .published__list_item {
@@ -66,7 +70,7 @@
         align-items: center;
     }
 
-    .published__list_item img {
+    .item-container img {
         width: 100%;
         max-width: 40px;
     }

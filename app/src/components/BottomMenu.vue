@@ -9,8 +9,8 @@
     </div>
     <div 
       class="menu-item" 
-      @click="setActive('channels')" 
-      :class="{ active: activeButton === 'channels' }"
+      @click="setActive('portfolio_discover')" 
+      :class="{ active: activeButton === 'portfolio_discover' }"
     >
       <img src="../assets/icons/linkIcon.svg" alt="Link Icon" />
     </div>

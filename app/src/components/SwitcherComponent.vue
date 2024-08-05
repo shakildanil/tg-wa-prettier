@@ -14,7 +14,7 @@
 </template>
 
 <script>
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
 
 export default {
   name: 'SwitcherComponent',
@@ -23,9 +23,17 @@ export default {
       type: Array,
       required: true,
     },
+    activeTab: {
+      type: String,
+      default: '',
+    }
   },
   setup(props, { emit }) {
-    const activeTab = ref(props.tabs[0]);
+    const activeTab = ref(props.activeTab);
+
+    watch(() => props.activeTab, (newVal) => {
+      activeTab.value = newVal;
+    });
 
     const setActiveTab = (tab) => {
       activeTab.value = tab;
@@ -45,8 +53,8 @@ export default {
   display: flex;
   justify-content: center;
   margin-bottom: 20px;
+  margin-top: 20px;
   width: 100%;
-  
 }
 
 .switcher__wrapper {
@@ -54,8 +62,7 @@ export default {
   justify-content: center;
   background-color: #EEEEF2;
   border-radius: 30px;
-  padding: 2px;
-  box-shadow: 0px 0px 5px 0px #00000026;
+  padding: 5px;
 }
 
 .switcher p {
@@ -66,7 +73,7 @@ export default {
   font-size: 14px;
   line-height: 22px;
   transition: background-color 0.3s, color 0.3s;
-  font-family: Montserrat, sans-serif;
+  font-family: 'Montserrat', sans-serif;
   font-weight: 500;
   text-align: center;
 }
@@ -78,7 +85,5 @@ export default {
   line-height: 22px;
   font-size: 14px;
   border-radius: 20px;
-  font-family: Montserrat, sans-serif;
-  text-align: center;
 }
 </style>

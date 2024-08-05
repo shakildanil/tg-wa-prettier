@@ -8,6 +8,7 @@
     <div class="info-block">
       <SwitcherComponent
         :tabs="['Not published', 'Published']"
+        :activeTab="activeTab"
         @tabChanged="handleTabChange"
       />
       <div v-if="activeTab === 'Not published'">
@@ -147,7 +148,7 @@ export default {
   height: 70%;
   background: #f9f8fa;
   border-radius: 20px 20px 0 0;
-  padding: 20px 20px 0 20px;
+  padding: 0px 20px 0 20px;
   display: flex;
   flex-direction: column;
   gap: 10px;
