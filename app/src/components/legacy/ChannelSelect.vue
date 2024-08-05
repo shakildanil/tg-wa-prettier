@@ -1,22 +1,22 @@
 <template>
   <div class="channel-select">
-    <div class="channel-header">
+    <div class="channel-header" @click.stop="toggleOpen" :class="{ disabled: isPublished }">
       <img :src="profilePhotoUrl || '../assets/img/spongebob_poster.webp'" alt="Avatar" class="avatar">
       <h3 class="channel-title">{{ title }}</h3>
       <span class="ev-value">Value: {{ typeof currentEV === 'number' ? currentEV.toFixed(2) + '$' : 'N/A' }}</span>
-      <span class="icon-container" @click.stop="toggleOpen">
+      <span v-if="!isPublished" class="icon-container">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" :class="{ open: isOpen }">
           <path d="M6 9L12 15L18 9" stroke="#C4C4C4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
       </span>
     </div>
     <transition name="slide-fade">
-      <div v-if="isOpen" class="channel-content">
+      <div v-if="isOpen && !isPublished" class="channel-content">
         <div class="content-row">
           <p>{{ link }}</p>
           <p class="subscribers">{{ formatMembers(members) }}</p>
         </div>
-        <div v-if="!isPublished" class="select-container">
+        <div class="select-container">
           <div class="select-header" @click="toggleSelect" :class="{ placeholder: !selectedSector }">
             <p :class="{ active: selectedSector || sector }">
               {{ selectedSector ? sectors[selectedSector].ru_transcr : (sector ? sectors[sector].ru_transcr : 'Выбрать категорию') }}
@@ -33,13 +33,7 @@
             </div>
           </transition>
         </div>
-        <div v-if="!isPublished">
-          <button :disabled="!selectedSector" class="publish-button" @click="publishChannel">Опубликовать</button>
-        </div>
-        <div v-else class="trade-buttons">
-          <button class="buy-button">Buy</button>
-          <button class="sell-button">Sell</button>
-        </div>
+        <button :disabled="!selectedSector" class="publish-button" @click="publishChannel">Опубликовать</button>
       </div>
     </transition>
   </div>
@@ -98,7 +92,9 @@ export default {
     const currentEV = ref(parseFloat(props.ev) || 'N/A');
 
     const toggleOpen = () => {
-      isOpen.value = !isOpen.value;
+      if (!props.isPublished) {
+        isOpen.value = !isOpen.value;
+      }
     };
 
     const toggleSelect = () => {
@@ -123,8 +119,21 @@ export default {
     const publishChannel = async () => {
       try {
         const totalSupply = 10000;
-        await updateChannelPublish(props.channelId, totalSupply);
+        const { listingPrice } = await updateChannelPublish(props.channelId, totalSupply);
         console.log(`Channel ${props.channelId} published with total supply: ${totalSupply}`);
+
+        // Обновить локальное хранилище
+        const channels = JSON.parse(localStorage.getItem('userChannels')) || [];
+        const updatedChannels = channels.map(channel => {
+          if (channel.channel_id === props.channelId) {
+            return { ...channel, isPublished: true, listing_price: listingPrice };
+          }
+          return channel;
+        });
+        localStorage.setItem('userChannels', JSON.stringify(updatedChannels));
+
+        // Обновить состояние компонента
+        props.isPublished = true;
       } catch (error) {
         console.error("Error publishing channel:", error);
       }
@@ -170,6 +179,10 @@ export default {
   display: flex;
   justify-content: space-between;
   align-items: center;
+}
+
+.channel-header.disabled {
+  cursor: default;
 }
 
 .channel-title {

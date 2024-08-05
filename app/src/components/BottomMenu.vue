@@ -2,8 +2,8 @@
   <div class="bottomMenu">
     <div 
       class="menu-item" 
-      @click="setActive('profile')" 
-      :class="{ active: activeButton === 'profile' }"
+      @click="setActive('home')" 
+      :class="{ active: activeButton === 'home' }"
     >
       <img src="../assets/icons/userIcon.svg" alt="User Icon" />
     </div>
@@ -30,7 +30,7 @@ export default {
   props: {
     defaultActive: {
       type: String,
-      default: 'profile'
+      default: 'home'
     }
   },
   data() {

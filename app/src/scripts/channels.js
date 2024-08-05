@@ -13,7 +13,6 @@ const base = Airtable.base(AIRTABLE_BASE_ID);
 
 export async function getUserChannels(tgID) {
   try {
-    // Найти запись пользователя в таблице Users по tgID
     const usersTable = base("Users");
     const usersRecords = await usersTable
       .select({
@@ -33,12 +32,10 @@ export async function getUserChannels(tgID) {
     const userChannelsTable = base("UserChannels");
     const userChannels = [];
 
-    // Пройти по каждому значению из userChannels_id
     for (const userChannelId of userChannelsIds) {
       const userChannelRecord = await userChannelsTable.find(userChannelId);
       const channelId = userChannelRecord.fields.channel_id;
 
-      // Найти и добавить запись Channels в массив ответа
       const channelRecord = await channelsTable.find(channelId);
       if (!channelRecord.fields.isDeleted) {
         userChannels.push(channelRecord.fields);
@@ -56,21 +53,18 @@ export async function updateChannelDataEV(channel_id, link, sector) {
   try {
     console.log("Starting update for channel:", channel_id, link, sector);
 
-    // Извлечь username из link
     const username = link.split("/").pop();
     if (!username) {
       throw new Error("Invalid link format");
     }
     console.log("Extracted username:", username);
 
-    // Сделать GET-запрос на API
     const response = await axios.get(
       `https://channelsio-ce-4225c1e02412.herokuapp.com/parse/${username}/${sector}`
     );
     let { ev } = response.data;
     console.log("Received EV from API:", ev);
 
-    // Найти запись по channel_id
     const channelsTable = base("Channels");
     const records = await channelsTable
       .select({
@@ -84,25 +78,23 @@ export async function updateChannelDataEV(channel_id, link, sector) {
     }
 
     const recordId = records[0].id;
-    const members = records[0].fields.members; // Предполагается, что members хранится в записи
+    const members = records[0].fields.members;
     console.log("Found record ID:", recordId);
     console.log("Members:", members);
 
-    // Проверка и расчет EV
     if (!ev || ev === 0 || ev === "0" || ev === "N/A" || ev === null) {
       const sectorData = sectors[sector];
       if (sectorData) {
         ev = members * sectorData.av_cost;
         console.log("Calculated EV:", ev);
       } else {
-        ev = "N/A"; // В случае если sectorData не найден
+        ev = "N/A";
       }
     }
 
-    // Обновить запись Channel с новым sector и EV
     await channelsTable.update(recordId, {
       sector: sector,
-      EV: ev,
+      listing_value: ev,
     });
 
     console.log(
@@ -115,10 +107,8 @@ export async function updateChannelDataEV(channel_id, link, sector) {
   }
 }
 
-export async function updateChannelPublish(channel_id, total_supply = 10000) {
+export async function updateChannelPublish(channel_id, totalSupply = 10000) {
   try {
-    console.log("Starting publish update for channel:", channel_id);
-
     const channelsTable = base("Channels");
     const records = await channelsTable
       .select({
@@ -132,25 +122,34 @@ export async function updateChannelPublish(channel_id, total_supply = 10000) {
     }
 
     const recordId = records[0].id;
-    const ev = records[0].fields.EV;
-    console.log("Current EV:", ev);
+    const ev = records[0].fields.listing_value;
 
-    if (!ev || ev === 0 || ev === "0" || ev === "N/A" || ev === null) {
-      throw new Error(`Invalid EV value for channel ${channel_id}`);
-    }
-
-    const listing_price = ev / total_supply;
-    console.log("Calculated listing price:", listing_price);
+    const listingPrice = ev / totalSupply;
 
     await channelsTable.update(recordId, {
-      total_supply: total_supply,
-      listing_price: listing_price,
+      total_supply: totalSupply,
+      listing_price: listingPrice,
       isPublished: true,
+      current_price: listingPrice,
+      current_value: ev,
     });
 
-    console.log(`Channel ${channel_id} published with total supply: ${total_supply}, listing price: ${listing_price}`);
+    console.log(
+      `Channel ${channel_id} updated with total supply: ${totalSupply}, listing price: ${listingPrice}, isPublished: true`
+    );
+
+    const channels = JSON.parse(localStorage.getItem('publishedChannels')) || [];
+    const updatedChannels = channels.map(channel => {
+      if (channel.channel_id === channel_id) {
+        return { ...channel, total_supply: totalSupply, listing_price: listingPrice, isPublished: true };
+      }
+      return channel;
+    });
+    localStorage.setItem('publishedChannels', JSON.stringify(updatedChannels));
+
+    return { totalSupply, listingPrice };
   } catch (error) {
-    console.error("Error updating channel publish status:", error);
+    console.error("Error updating channel data:", error);
     throw error;
   }
 }
@@ -161,11 +160,11 @@ export async function getPublishedChannels() {
     const records = await channelsTable
       .select({
         filterByFormula: `{isPublished} = TRUE()`,
-        maxRecords: 100, // например, максимальное количество записей
       })
-      .all();
+      .firstPage();
 
-    return records.map(record => record.fields);
+    const publishedChannels = records.map(record => record.fields);
+    return publishedChannels;
   } catch (error) {
     console.error("Error fetching published channels:", error);
     throw error;

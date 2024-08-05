@@ -1,24 +1,25 @@
 <template>
-    <component :is="currentPageComponent" />
-    <BottomMenu :defaultActive="currentPage" @update:page="handleNavigation" />
+  <component :is="currentPageComponent" />
+  <BottomMenu :defaultActive="currentPage" @update:page="handleNavigation" />
 </template>
 
 <script>
 import BottomMenu from './components/BottomMenu.vue';
-import UserProfile from './components/UserProfile.vue';
-import SecondWindow from './components/SecondWindow.vue';
-import OrderPanel from './components/OrderPanel.vue';
+import HomePage from './pages/HomePage.vue';
+// import SecondWindow from './components/SecondWindow.vue';
+// import OrderPanel from './components/OrderPanel.vue';
 
 export default {
   name: 'App',
   components: {
-    UserProfile,
-    SecondWindow,
+    HomePage,
+    // SecondWindow,
+    // OrderPanel,
     BottomMenu
   },
   data() {
     return {
-      currentPage: 'profile'
+      currentPage: 'home'
     };
   },
   computed: {
@@ -27,9 +28,9 @@ export default {
     },
     pages() {
       return {
-        profile: UserProfile,
-        channels: SecondWindow,
-        portfolio: OrderPanel 
+        home: HomePage,
+        // channels: SecondWindow,
+        // portfolio: OrderPanel
       };
     }
   },
@@ -47,9 +48,5 @@ export default {
   padding: 0;
   width: 100%;
   height: 100vh;
-  /* overflow: hidden;
-  display: flex;
-  justify-content: center;
-  align-items: flex-start; */
 }
 </style>
