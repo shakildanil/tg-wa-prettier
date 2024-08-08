@@ -28,6 +28,7 @@ export default {
   color: #6B7280; /* gray-500 color */
   font-size: 16px;
   margin-bottom: 10px;
+  text-align: center;
 }
 
 .amount {

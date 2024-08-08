@@ -1,8 +1,8 @@
 <template>
   <div class="background">
     <div class="top-section">
-        <StatisticsWidget />
-        <div class="user-info">Иван Иванов | @ivanov</div>
+      <StatisticsWidget />
+      <div class="user-info">Иван Иванов | @ivanov</div>
     </div>
     
     <div class="info-block">
@@ -29,20 +29,26 @@
         </div>
       </div>
       <div v-if="activeTab === 'Published'">
-        <div v-for="channelData in publishedChannels" :key="channelData.channel_id">
-          <ChannelLong
-            v-if="channelData && channelData.title"
-            :title="channelData.title"
-            :link="channelData.link"
-            :profilePhotoUrl="channelData.profilePhoto ? channelData.profilePhoto[0].url : ''"
-            :listing_value="channelData.listing_value || 'N/A'"
-            :members="channelData.members || 'N/A'"
-            :channelId="channelData.channel_id"
-            :sector="channelData.sector"
-            :isPublished="channelData.isPublished"
-            :current_value="channelData.current_value"
-            @update:isPublished="updatePublishedStatus(channelData.channel_id, true)"
-          />
+        <div v-if="publishedChannels.length === 0" class="no-channels-message">
+          You don't have any published channels yet. 
+          Go back to <span class="clickable-text" @click="handleTabChange('Not published')">Not published</span> section
+        </div>
+        <div v-else>
+          <div v-for="channelData in publishedChannels" :key="channelData.channel_id">
+            <ChannelLong
+              v-if="channelData && channelData.title"
+              :title="channelData.title"
+              :link="channelData.link"
+              :profilePhotoUrl="channelData.profilePhoto ? channelData.profilePhoto[0].url : ''"
+              :listing_value="channelData.listing_value || 'N/A'"
+              :members="channelData.members || 'N/A'"
+              :channelId="channelData.channel_id"
+              :sector="channelData.sector"
+              :isPublished="channelData.isPublished"
+              :current_value="channelData.current_value"
+              @update:isPublished="updatePublishedStatus(channelData.channel_id, true)"
+            />
+          </div>
         </div>
       </div>
     </div>
@@ -121,9 +127,11 @@ export default {
   width: 100%;
   height: 100vh;
   display: flex;
-  align-items: flex-start;
-  justify-content: center;
   position: relative;
+  background-color: #6FA0FF;
+  flex-direction: column;
+  justify-content: start;
+  gap: 20px;
 }
 
 .profilePic {
@@ -137,25 +145,24 @@ export default {
 
 .top-section {
   width: 100%;
-  height: 50%;
-  background-color: #6FA0FF;
+  height: fit-content;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
 }
 
 .info-block {
-  position: absolute;
-  bottom: 0;
-  width: 100%;
-  height: 70%;
   background: #f9f8fa;
   border-radius: 20px 20px 0 0;
   padding: 0px 20px 0 20px;
   display: flex;
   flex-direction: column;
   gap: 10px;
+  flex: 1;
 }
 
 .user-info {
-  position: absolute;
   bottom: calc(70% + 20px);
   width: 60%;
   background: rgba(255, 255, 255, 0.5);
@@ -164,7 +171,22 @@ export default {
   border-radius: 20px 20px 20px 20px;
   text-align: center;
   margin: 0 auto;
-  left: 50%;
-  transform: translateX(-50%);
+}
+
+.no-channels-message {
+  text-align: center;
+  font-family: 'Montserrat';
+  font-size: 16px;
+  color: #000;
+  margin-top: 20px;
+}
+
+.clickable-text {
+  color: #007bff;
+  cursor: pointer;
+}
+
+.clickable-text:hover {
+  text-decoration: underline;
 }
 </style>

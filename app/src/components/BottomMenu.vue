@@ -60,7 +60,7 @@ export default {
   left: 50%;
   transform: translateX(-50%);
   width: fit-content;
-  background-color: #eeeef2;
+  background-color: #EEEEF2;
   /* padding: 20px; */
   display: flex;
   justify-content: center;
@@ -79,6 +79,7 @@ export default {
   cursor: pointer;
   border-radius: 30px;
   background-color: transparent;
+  margin: 2px;
 }
 
 .menu-item.active {
